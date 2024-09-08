@@ -4,7 +4,8 @@ const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: 'root',
-  database: 'alasenalerta'
+  database: 'alasenalerta',
+  port: 3306 // El puerto correcto para MySQL
 });
 
 connection.connect((err) => {
@@ -14,3 +15,5 @@ connection.connect((err) => {
   }
   console.log('Conectado a MySQL');
 });
+
+module.exports = connection;

@@ -1,3 +1,4 @@
+const express = require('express'); // Importar express
 const { register, login } = require('./controladores');
 
 const router = express.Router();

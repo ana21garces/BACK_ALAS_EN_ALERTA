@@ -5,7 +5,14 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 3000;
+
+const rutasUsuarios = require('./rutas'); // Ajusta la ruta si es necesario
+
+// Imprime las variables de entorno para verificar que se están cargando
+console.log('DB_USER:', process.env.DB_USER);
+console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
+console.log('DB_NAME:', process.env.DB_NAME);
 
 // Crear conexión con MySQL
 const db = mysql.createConnection({
@@ -27,6 +34,10 @@ db.connect((err) => {
 app.get('/', (req, res) => {
   res.send('Alas en Alerta');
 });
+
+// Usar las rutas de usuario (rutas de registro y login)
+app.use('/', rutasUsuarios);  // Aquí asocias las rutas que están en el archivo rutasUsuarios
+
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
