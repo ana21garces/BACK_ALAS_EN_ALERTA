@@ -1,6 +1,20 @@
 const supabase = require ('./conexion');
 const express = require('express');
 
+//crear usuarios
+async function crearUsuarios() {
+    //modificar segun el frond
+    const { data, error } = await supabase
+        .from('usuarios')
+        .insert([
+        { id_usuario: 52245 , nombre_usuario: 'zoar',
+          correo_electronico:"gregr@gmail.com", contraseña: "rfweffffer",
+          tipo_usuario: "Visitante"
+         },
+])
+      .select()
+
+}
 
 // Función para crear usuarios
 async function crearUsuarios(nombre_usuario, correo_electronico, contraseña, tipo_usuario) {
