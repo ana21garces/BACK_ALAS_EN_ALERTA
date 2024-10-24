@@ -140,6 +140,7 @@ async function eliminarPerfil(id_perfil) {
 crearPerfil();
 
 module.exports = {
+    obtenerUltimoUsuario,
     crearPerfil,
     obtenerPerfiles,
     actualizarPerfil,
