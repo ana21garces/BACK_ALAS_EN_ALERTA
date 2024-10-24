@@ -80,8 +80,6 @@ async function eliminarUsuarios(id_usuario) {
     }
 }
 
-crearUsuarios();
-
 module.exports = { 
     crearUsuarios,
     obtenerUsuarios,
