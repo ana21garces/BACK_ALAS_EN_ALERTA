@@ -1,6 +1,7 @@
 const supabase = require('./conexion');
 const express = require('express');
 
+
 // Función para obtener el último id_usuario disponible
 async function obtenerUltimoUsuario() {
     try {
