@@ -8,7 +8,7 @@ app.use(express.json()); // Middleware para manejar JSON
 
 //USUARIOS 
 
-/* Endpoint para crear usuarios
+// Endpoint para crear usuarios
 app.post('/crear-usuario', async (req, res) => {
     // Extraer los datos del cuerpo de la solicitud
     const { nombre_usuario, correo_electronico, contraseña, tipo_usuario } = req.body;
@@ -54,4 +54,3 @@ app.delete('/eliminar-usuario', async (req, res) => {
         res.status(500).json({ message: 'Error al eliminar el usuario' });
     }
 });
-*/
