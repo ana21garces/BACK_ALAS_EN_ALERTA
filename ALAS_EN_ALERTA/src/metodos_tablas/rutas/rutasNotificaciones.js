@@ -5,9 +5,6 @@ const app = express();
 const port = 4000;
 
 
-
-//NOTIFICACIONES
-
 // Ruta para crear una notificación
 app.post('/crear-notificacion', async (req, res) => {
     const { idUsuario, tipo, mensaje } = req.body; // Capturar los datos del body
