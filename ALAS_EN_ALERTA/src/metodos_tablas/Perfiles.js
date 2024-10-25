@@ -25,7 +25,6 @@ async function obtenerUltimoUsuario() {
     }
 }
 
-// Función para crear un perfil automáticamente con el último usuario disponible
 async function crearPerfil(nuevaBio = '', nuevaFotoPerfil = '', nuevasPreferencias = '') {
     try {
         // Obtener el último id_usuario disponible
@@ -36,9 +35,28 @@ async function crearPerfil(nuevaBio = '', nuevaFotoPerfil = '', nuevasPreferenci
             return null;
         }
 
-        console.log('Creando perfil para el usuario con ID:', id_usuario);
+        console.log('Verificando si el usuario con ID:', id_usuario, 'ya tiene un perfil...');
+
+        // Verificar si el usuario ya tiene un perfil asociado
+        const { data: perfilExistente, error: errorPerfil } = await supabase
+            .from('perfiles')
+            .select('id_usuario')
+            .eq('id_usuario', id_usuario)
+            .limit(1) // Recupera solo un registro si existen duplicados
+            .maybeSingle();
+
+        if (errorPerfil) {
+            console.error('Error al verificar si el perfil ya existe: ', errorPerfil);
+            return null;
+        }
+
+        if (perfilExistente) {
+            console.log(`El usuario con ID ${id_usuario} ya tiene un perfil.`);
+            return null; // Evitar crear el perfil si ya existe
+        }
 
         // Crear el perfil asociado a ese usuario
+        console.log('Creando perfil para el usuario con ID:', id_usuario);
         const { data, error } = await supabase
             .from('perfiles')
             .insert([
@@ -59,10 +77,11 @@ async function crearPerfil(nuevaBio = '', nuevaFotoPerfil = '', nuevasPreferenci
             return data; // Retorna el perfil creado
         }
     } catch (error) {
-        console.error('Error en crearPerfilAutomatico:', error);
+        console.error('Error en crearPerfil:', error);
         return null;
     }
 }
+
 
 // Función para obtener todos los perfiles
 async function obtenerPerfiles() {
@@ -136,8 +155,7 @@ async function eliminarPerfil(id_perfil) {
     }
 }
 
-// Prueba: Crear un perfil automáticamente para el último usuario
-crearPerfil();
+
 
 module.exports = {
     obtenerUltimoUsuario,
