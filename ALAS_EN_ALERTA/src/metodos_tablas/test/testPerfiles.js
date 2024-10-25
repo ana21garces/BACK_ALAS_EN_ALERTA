@@ -13,8 +13,6 @@ const { eliminarPerfil } = require('../Perfiles');
 })();
 
 
-
-
 // Probar la función para crear perfil
 (async () => {
     try {
@@ -25,7 +23,7 @@ const { eliminarPerfil } = require('../Perfiles');
     }
 })();
 
-
+/*
 // Probar la función para obtener perfil 
 (async () => {
     try {
@@ -76,5 +74,5 @@ const { eliminarPerfil } = require('../Perfiles');
     }
 })();
 
-
+*/
 
