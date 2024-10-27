@@ -1,41 +1,15 @@
 const supabase = require('./conexion');
-const { crearUsuarios } = require('./Usuarios');
-const { crearPerfil} = require('./Perfiles');
 const express = require('express');
 
-// Función para obtener el último id_usuario disponible
-async function obtenerUltimoUsuario() {
-    try {
-        // Obtener el último usuario creado (suponiendo que los id_usuario están en orden ascendente)
-        const { data, error } = await supabase
-            .from('usuarios')
-            .select('id_usuario')
-            .order('id_usuario', { ascending: false })  // Ordenar de manera descendente para obtener el último
-            .limit(1)  // Limitar a un solo resultado
-            .single();
 
-        if (error || !data) {
-            console.error('Error al obtener el último usuario:', error);
-            return null;
-        }
-
-        return data.id_usuario;
-    } catch (error) {
-        console.error('Error en obtenerUltimoUsuario:', error);
-        return null;
-    }
-}
-
-// Función para crear notificación
 async function crearNotificacion(idUsuario, tipo, mensaje) {
-    const id_usuario = await obtenerUltimoUsuario();
     const { data, error } = await supabase
         .from('Notificaciones')
         .insert([{
-            ID_Usuario: id_usuario,
+            ID_Usuario: idUsuario, // Utiliza el idUsuario recibido
             Tipo_Notificacion: tipo,
             Mensaje_Notificacion: mensaje,
-            Fecha_Notificacion: new Date().toISOString(), // Genera la fecha actual
+            Fecha_Notificacion: new Date().toISOString(),
             Estado: 'No Leída'
         }])
         .select();
@@ -48,14 +22,19 @@ async function crearNotificacion(idUsuario, tipo, mensaje) {
 }
 
 
-async function obtenerNotificacion(idUsuario) {
+
+async function obtenerNotificacion(idUsuario, limite = 10, pagina = 1) {
+    const offset = (pagina - 1) * limite;
     const { data, error } = await supabase
         .from('Notificaciones')
         .select()
         .eq('ID_Usuario', idUsuario)
-        .order('Fecha_Notificacion', { ascending: false });
+        .order('Fecha_Notificacion', { ascending: false })
+        .limit(limite)
+        .offset(offset);
     return { data, error };
 }
+
 
 
 async function marcarNotificacionLeida(idNotificacion) {
@@ -76,15 +55,20 @@ async function marcarTodasLeidas(idUsuario) {
     return { data, error };
 }
 
-async function filtrarNotificacionPorTipo(idUsuario, tipoNotificacion) {
+
+async function filtrarNotificacionPorTipo(idUsuario, tipoNotificacion, limite = 10, pagina = 1) {
+    const offset = (pagina - 1) * limite;
     const { data, error } = await supabase
         .from('Notificaciones')
         .select()
         .eq('ID_Usuario', idUsuario)
         .eq('Tipo_Notificacion', tipoNotificacion)
-        .order('Fecha_Notificacion', { ascending: false });
+        .order('Fecha_Notificacion', { ascending: false })
+        .limit(limite)
+        .offset(offset);
     return { data, error };
 }
+
 
 async function recuentoDeNotiLeidas(idUsuario) {
     const { count, error } = await supabase
