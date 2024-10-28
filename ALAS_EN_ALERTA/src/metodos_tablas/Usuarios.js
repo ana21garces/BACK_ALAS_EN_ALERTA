@@ -3,7 +3,6 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 
 
-
 // Función para crear usuarios
 async function crearUsuarios(nombre_usuario, correo_electronico, contraseña, tipo_usuario) {
     try {
