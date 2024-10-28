@@ -1,7 +1,5 @@
 const express = require('express');
 const app = express();
-const rutasUsuarios = require('../metodos_tablas/rutas/rutasUsuarios');
-const rutasPerfiles = require('../metodos_tablas/rutas/rutasPerfiles');
 const { loginAuth } = require('../autenticacion/loginAuth');
 const { registerAuth } = require('../autenticacion/registerAuth');
 
@@ -10,9 +8,6 @@ require('dotenv').config();
 
 app.use(express.json());
 
-// Rutas
-app.use('/usuarios', rutasUsuarios);
-app.use('/perfiles', rutasPerfiles);
 
 
 // Endpoint de inicio de sesión
