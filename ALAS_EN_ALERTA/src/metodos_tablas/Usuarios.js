@@ -1,23 +1,28 @@
 const supabase = require ('./conexion');
 const express = require('express');
+const bcrypt = require('bcrypt');
 
 
 // Función para crear usuarios
 async function crearUsuarios(nombre_usuario, correo_electronico, contraseña, tipo_usuario) {
     try {
-        // Insertar los datos recibidos como parámetros en la tabla 'usuarios'
+        // Encriptar la contraseña recibida como parámetro
+        const hashedPassword = await bcrypt.hash(contraseña, 10);
+
+        // Insertar los datos en la tabla 'usuarios' usando Supabase
         const { data, error } = await supabase
             .from('usuarios')
             .insert([
                 {
                     nombre_usuario: nombre_usuario,
                     correo_electronico: correo_electronico,
-                    contraseña: contraseña,
+                    contraseña: hashedPassword, // Usar la contraseña hasheada
                     tipo_usuario: tipo_usuario
                 }
             ])
             .select();
 
+        // Verificar si hubo algún error al insertar
         if (error) {
             console.error('Error al crear usuario:', error);
             return null;
@@ -79,8 +84,6 @@ async function eliminarUsuarios(id_usuario) {
         return true;  // Retorna true si la eliminación fue exitosa
     }
 }
-
-crearUsuarios();
 
 module.exports = { 
     crearUsuarios,
