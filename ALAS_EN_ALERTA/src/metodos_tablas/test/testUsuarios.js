@@ -6,7 +6,7 @@ const { eliminarUsuarios} = require('../Usuarios');
 
 async function CrearUsuarios() {
     try {
-        const idUsuario = await crearUsuarios('Shirley segura', 'sirly@gmail.com', '2022', 'Funcionario');
+        const idUsuario = await crearUsuarios('alexis', 'alexis@gmail.com', '2022', 'Funcionario');
         if (idUsuario) {
             console.log(`✔️ Usuario creado con ID: ${idUsuario}`);
         } else {
