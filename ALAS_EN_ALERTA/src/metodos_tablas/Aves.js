@@ -1,20 +1,15 @@
 const supabase = require('../conexion');
-const express = require('express');
 
 // Función para crear un registro de aves con nombre y descripción
 async function crearAve(nombre_ave, descripcion_ave) {
     try {
-        
         const { data, error } = await supabase
             .from('aves')
-            .insert([
-                {
-                    nombre_ave: nombre_ave,
-                    descripcion_ave: descripcion_ave,  
-                    
-                    // No incluimos 'id_ave' porque será generado automáticamente
-                }
-            ])
+            .insert([{
+                nombre_ave,
+                descripcion_ave  
+                // No incluimos 'id_ave' porque será generado automáticamente
+            }])
             .select();
 
         if (error) {
@@ -23,15 +18,13 @@ async function crearAve(nombre_ave, descripcion_ave) {
         } else {
             console.log('Ave registrada:', data);
             console.log('El registro del ave se creó con éxito');
-            return data[0].id_ave;  // Retorna el ID del registro creado
+            return data[0]?.id_ave;  // Retorna el ID del registro creado si existe
         }
     } catch (error) {
         console.error('Error al crear el registro de ave:', error);
         return null;
     }
 }
-
-module.exports = { crearAve };
 
 // Función para obtener todas las aves
 async function obtenerAves() {
@@ -53,9 +46,8 @@ async function actualizarAve(id_ave, nombre_ave, descripcion_ave) {
     const { data, error } = await supabase
         .from('aves')
         .update({
-            nombre_ave: nombre_ave,
-            descripcion_ave: descripcion_ave,  // Actualiza la descripción del ave
-            
+            nombre_ave,
+            descripcion_ave  // Actualiza la descripción del ave
         })
         .eq('id_ave', id_ave)  // Filtra por el ID del ave
         .select();
@@ -78,14 +70,19 @@ async function eliminarAve(id_ave) {
 
     if (error) {
         console.error('Error al eliminar el registro de ave:', error);
-        return null;
+        return false;
     } else {
         console.log(`Registro de ave con ID ${id_ave} eliminado correctamente.`);
         return true;  // Retorna true si la eliminación fue exitosa
     }
 }
 
-crearAve();
-obtenerAves();
-actualizarAve();
-eliminarAve();
+// Exportar todas las funciones
+module.exports = {
+    crearAve,
+    obtenerAves,
+    actualizarAve,
+    eliminarAve
+};
+
+
