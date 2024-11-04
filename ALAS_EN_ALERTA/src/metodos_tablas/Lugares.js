@@ -1,19 +1,15 @@
 const supabase = require('../conexion');
-const express = require('express');
 
 // Función para crear un registro de lugares con nombre y descripción
 async function crearLugar(nombre_lugar, descripcion_lugar) {
     try {
-        
         const { data, error } = await supabase
             .from('lugares')
-            .insert([
-                {
-                    nombre_lugar: nombre_lugar,  
-                    descripcion_lugar: descripcion_lugar  
-                    // El campo id_lugar se genera automáticamente
-                }
-            ])
+            .insert([{
+                nombre_lugar,
+                descripcion_lugar
+                // El campo id_lugar se genera automáticamente
+            }])
             .select();
 
         if (error) {
@@ -22,15 +18,13 @@ async function crearLugar(nombre_lugar, descripcion_lugar) {
         } else {
             console.log('Lugar registrado:', data);
             console.log('El registro del lugar se creó con éxito');
-            return data[0].id_lugar;  // Retorna el ID del registro creado
+            return data[0]?.id_lugar;  // Retorna el ID del registro creado si existe
         }
     } catch (error) {
         console.error('Error al crear el registro de lugar:', error);
         return null;
     }
 }
-
-module.exports = { crearLugar };
 
 // Función para obtener todos los lugares
 async function obtenerLugares() {
@@ -52,8 +46,8 @@ async function actualizarLugar(id_lugar, nombre_lugar, descripcion_lugar) {
     const { data, error } = await supabase
         .from('lugares')
         .update({
-            nombre_lugar: nombre_lugar, 
-            descripcion_lugar: descripcion_lugar 
+            nombre_lugar,
+            descripcion_lugar
         })
         .eq('id_lugar', id_lugar)  
         .select();
@@ -76,14 +70,19 @@ async function eliminarLugar(id_lugar) {
 
     if (error) {
         console.error('Error al eliminar el registro de lugar:', error);
-        return null;
+        return false;
     } else {
         console.log(`Registro de lugar con ID ${id_lugar} eliminado correctamente.`);
         return true;  // Retorna true si la eliminación fue exitosa
     }
 }
 
-crearLugar();
-obtenerLugares();
-actualizarLugar();
-eliminarLugar();
+// Exportar todas las funciones
+module.exports = {
+    crearLugar,
+    obtenerLugares,
+    actualizarLugar,
+    eliminarLugar
+};
+
+
