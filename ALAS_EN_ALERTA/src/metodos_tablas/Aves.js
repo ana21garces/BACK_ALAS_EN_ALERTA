@@ -1,14 +1,13 @@
-const supabase = require('../conexion');
+import supabase from '../conexion.js';
 
-// Función para crear un registro de aves con nombre y descripción
-async function crearAve(nombre_ave, descripcion_ave) {
+
+export async function crearAve(nombre_ave, descripcion_ave) {
     try {
         const { data, error } = await supabase
             .from('aves')
             .insert([{
                 nombre_ave,
-                descripcion_ave  
-                // No incluimos 'id_ave' porque será generado automáticamente
+                descripcion_ave
             }])
             .select();
 
@@ -17,8 +16,7 @@ async function crearAve(nombre_ave, descripcion_ave) {
             return null;
         } else {
             console.log('Ave registrada:', data);
-            console.log('El registro del ave se creó con éxito');
-            return data[0]?.id_ave;  // Retorna el ID del registro creado si existe
+            return data[0]?.id_ave;
         }
     } catch (error) {
         console.error('Error al crear el registro de ave:', error);
@@ -26,8 +24,8 @@ async function crearAve(nombre_ave, descripcion_ave) {
     }
 }
 
-// Función para obtener todas las aves
-async function obtenerAves() {
+// Función para obtener todos los registros de aves
+export async function obtenerAves() {
     const { data, error } = await supabase
         .from('aves')
         .select('*');
@@ -37,19 +35,19 @@ async function obtenerAves() {
         return null;
     } else {
         console.log('Aves:', data);
-        return data;  // Retorna los datos para el front-end
+        return data;
     }
 }
 
-// Función para actualizar un registro de ave con nombre y descripción
-async function actualizarAve(id_ave, nombre_ave, descripcion_ave) {
+// Función para actualizar un registro de ave
+export async function actualizarAve(id_ave, nombre_ave, descripcion_ave) {
     const { data, error } = await supabase
         .from('aves')
         .update({
             nombre_ave,
-            descripcion_ave  // Actualiza la descripción del ave
+            descripcion_ave
         })
-        .eq('id_ave', id_ave)  // Filtra por el ID del ave
+        .eq('id_ave', id_ave)
         .select();
 
     if (error) {
@@ -57,32 +55,22 @@ async function actualizarAve(id_ave, nombre_ave, descripcion_ave) {
         return null;
     } else {
         console.log('Registro de ave actualizado:', data);
-        return data;  // Retorna los datos actualizados para el front-end
+        return data;
     }
 }
 
 // Función para eliminar un registro de ave
-async function eliminarAve(id_ave) {
+export async function eliminarAve(id_ave) {
     const { error } = await supabase
         .from('aves')
         .delete()
-        .eq('id_ave', id_ave);  // Filtra por el ID del ave
+        .eq('id_ave', id_ave);
 
     if (error) {
         console.error('Error al eliminar el registro de ave:', error);
         return false;
     } else {
         console.log(`Registro de ave con ID ${id_ave} eliminado correctamente.`);
-        return true;  // Retorna true si la eliminación fue exitosa
+        return true;
     }
 }
-
-// Exportar todas las funciones
-module.exports = {
-    crearAve,
-    obtenerAves,
-    actualizarAve,
-    eliminarAve
-};
-
-

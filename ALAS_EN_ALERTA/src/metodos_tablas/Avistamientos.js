@@ -1,14 +1,17 @@
-const supabase = require('../conexion');
+import supabase from '../conexion.js';
 
-// Función para crear un registro de avistamientos con descripción y foto
-async function crearAvistamiento(descripcion_avistamiento, foto_avistamiento) {
+
+export async function crearAvistamiento(descripcion_avistamiento, foto_avistamiento) {
     try {
+        const fecha_publicacion = new Date(); // Genera la fecha y hora actuales
+
         const { data, error } = await supabase
             .from('avistamientos')
             .insert([{
-                descripcion_avistamiento,  
-                foto_avistamiento,  
-                fecha_hora_registro: new Date()  // Fecha y hora actuales
+                descripcion_avistamiento,
+                foto_avistamiento,
+                fecha_publicacion,           // Agrega la fecha de publicación
+                fecha_avistamiento: new Date() // Fecha y hora actuales para el registro
                 // Los campos id_ave, id_lugar, id_usuario se generan automáticamente
             }])
             .select();
@@ -18,8 +21,7 @@ async function crearAvistamiento(descripcion_avistamiento, foto_avistamiento) {
             return null;
         } else {
             console.log('Avistamiento registrado:', data);
-            console.log('El registro del avistamiento se creó con éxito');
-            return data[0]?.id_avistamiento;  // Retorna el ID del registro creado si existe
+            return data[0]?.id_avistamiento; // Retorna el ID del registro creado si existe
         }
     } catch (error) {
         console.error('Error al crear el registro de avistamiento:', error);
@@ -28,7 +30,7 @@ async function crearAvistamiento(descripcion_avistamiento, foto_avistamiento) {
 }
 
 // Función para obtener todos los avistamientos
-async function obtenerAvistamientos() {
+export async function obtenerAvistamientos() {
     const { data, error } = await supabase
         .from('avistamientos')
         .select('*');
@@ -38,17 +40,17 @@ async function obtenerAvistamientos() {
         return null;
     } else {
         console.log('Avistamientos:', data);
-        return data;  // Retorna los datos para el front-end
+        return data; // Retorna los datos para el front-end
     }
 }
 
 // Función para actualizar un registro de avistamiento con descripción y foto
-async function actualizarAvistamiento(id_avistamiento, descripcion_avistamiento, foto_avistamiento) {
+export async function actualizarAvistamiento(id_avistamiento, descripcion_avistamiento, foto_avistamiento) {
     const { data, error } = await supabase
         .from('avistamientos')
         .update({
-            descripcion_avistamiento, 
-            foto_avistamiento  
+            descripcion_avistamiento,
+            foto_avistamiento
         })
         .eq('id_avistamiento', id_avistamiento)
         .select();
@@ -58,12 +60,12 @@ async function actualizarAvistamiento(id_avistamiento, descripcion_avistamiento,
         return null;
     } else {
         console.log('Registro de avistamiento actualizado:', data);
-        return data;  // Retorna los datos actualizados para el front-end
+        return data; // Retorna los datos actualizados para el front-end
     }
 }
 
 // Función para eliminar un registro de avistamiento
-async function eliminarAvistamiento(id_avistamiento) {
+export async function eliminarAvistamiento(id_avistamiento) {
     const { error } = await supabase
         .from('avistamientos')
         .delete()
@@ -74,14 +76,6 @@ async function eliminarAvistamiento(id_avistamiento) {
         return false;
     } else {
         console.log(`Registro de avistamiento con ID ${id_avistamiento} eliminado correctamente.`);
-        return true;  // Retorna true si la eliminación fue exitosa
+        return true; // Retorna true si la eliminación fue exitosa
     }
 }
-
-// Exportar todas las funciones
-module.exports = {
-    crearAvistamiento,
-    obtenerAvistamientos,
-    actualizarAvistamiento,
-    eliminarAvistamiento
-};
