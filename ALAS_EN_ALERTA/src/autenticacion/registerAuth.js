@@ -1,9 +1,11 @@
-const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
+import path from 'path';
+import dotenv from 'dotenv';
+import supabase from '../metodos_tablas/conexion.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
-const supabase = require('../metodos_tablas/conexion');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+// Configuración de dotenv para cargar el archivo .env
+dotenv.config({ path: path.resolve(path.dirname(''), '../../.env') });
 
 const JWT_SECRET = process.env.JWT_SECRET; // Obtener JWT_SECRET
 
@@ -13,8 +15,7 @@ if (!JWT_SECRET) {
     throw new Error('JWT_SECRET no está definido en el archivo .env'); // Comprobar que esté definido
 }
 
-
-async function registerAuth(nombre_usuario, correo_electronico, contraseña, tipo_usuario) {
+export async function registerAuth(nombre_usuario, correo_electronico, contraseña, tipo_usuario) {
     const hashedPassword = await bcrypt.hash(contraseña, 10);
 
     // Verificar si el usuario ya existe (sin usar .single())
@@ -46,5 +47,3 @@ async function registerAuth(nombre_usuario, correo_electronico, contraseña, tip
 
     return { id: data[0].id_usuario, message: 'Usuario registrado exitosamente' };
 }
-
-module.exports = { registerAuth };

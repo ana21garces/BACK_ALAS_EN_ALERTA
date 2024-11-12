@@ -1,9 +1,12 @@
-require('dotenv').config(); // Carga las variables de entorno desde .env
-const { loginAuth } = require('../autenticacion/loginAuth'); // Asegúrate de que la ruta sea correcta
+import dotenv from 'dotenv';
+dotenv.config(); // Carga las variables de entorno desde .env
+
+// Importación dinámica de loginAuth
+const { loginAuth } = await import('../autenticacion/loginAuth.js'); 
 
 // Define los datos de prueba
-const emailDePrueba = 'alexis@gmail.com'; // Asegúrate de que este email esté en la base de datos
-const contraseñaDePrueba = '2022'; // Coloca aquí la contraseña en texto claro que corresponde al usuario
+const emailDePrueba = 'yobe@gmail.com'; 
+const contraseñaDePrueba = '123'; 
 
 // Función para probar la autenticación de login
 async function probarLoginAuth() {

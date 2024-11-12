@@ -1,10 +1,9 @@
-const supabase = require ('./conexion');
-const express = require('express');
-const bcrypt = require('bcrypt');
-
+import supabase from './conexion.js';
+import express from 'express';
+import bcrypt from 'bcrypt';
 
 // Función para crear usuarios
-async function crearUsuarios(nombre_usuario, correo_electronico, contraseña, tipo_usuario) {
+export async function crearUsuarios(nombre_usuario, correo_electronico, contraseña, tipo_usuario) {
     try {
         // Encriptar la contraseña recibida como parámetro
         const hashedPassword = await bcrypt.hash(contraseña, 10);
@@ -14,10 +13,10 @@ async function crearUsuarios(nombre_usuario, correo_electronico, contraseña, ti
             .from('usuarios')
             .insert([
                 {
-                    nombre_usuario: nombre_usuario,
-                    correo_electronico: correo_electronico,
+                    nombre_usuario,
+                    correo_electronico,
                     contraseña: hashedPassword, // Usar la contraseña hasheada
-                    tipo_usuario: tipo_usuario
+                    tipo_usuario
                 }
             ])
             .select();
@@ -38,7 +37,7 @@ async function crearUsuarios(nombre_usuario, correo_electronico, contraseña, ti
 }
 
 // Función para obtener todos los usuarios
-async function obtenerUsuarios() {
+export async function obtenerUsuarios() {
     const { data, error } = await supabase
         .from('usuarios')
         .select('*');
@@ -53,15 +52,18 @@ async function obtenerUsuarios() {
 }
 
 // Función para actualizar un usuario
-async function actualizarUsuarios(id_usuario, tipo_usuario) {
+export async function actualizarUsuarios(id_usuario, tipo_usuario) {
     const { data, error } = await supabase
         .from('usuarios')
-        .update({ tipo_usuario: tipo_usuario })  // Recibe el tipo de usuario como parámetro
+        .update({ tipo_usuario })  // Recibe el tipo de usuario como parámetro
         .eq('id_usuario', id_usuario)  // Filtra por el ID de usuario
         .select();
 
     if (error) {
         console.error('Error al actualizar usuario:', error);
+        return null;
+    } else if (!data || data.length === 0) {
+        console.log(`No se encontró el usuario con id ${id_usuario} para actualizar.`);
         return null;
     } else {
         console.log('Usuario actualizado:', data);
@@ -70,7 +72,7 @@ async function actualizarUsuarios(id_usuario, tipo_usuario) {
 }
 
 // Función para eliminar un usuario
-async function eliminarUsuarios(id_usuario) {
+export async function eliminarUsuarios(id_usuario) {
     const { error } = await supabase
         .from('usuarios')
         .delete()
@@ -84,11 +86,3 @@ async function eliminarUsuarios(id_usuario) {
         return true;  // Retorna true si la eliminación fue exitosa
     }
 }
-
-module.exports = { 
-    crearUsuarios,
-    obtenerUsuarios,
-    actualizarUsuarios,
-    eliminarUsuarios
-
- };

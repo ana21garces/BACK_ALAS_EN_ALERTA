@@ -1,9 +1,11 @@
-const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
+import path from 'path';
+import dotenv from 'dotenv';
+import supabase from '../metodos_tablas/conexion.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
-const supabase = require('../metodos_tablas/conexion');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+// Configuración de dotenv para cargar el archivo .env
+dotenv.config({ path: path.resolve(path.dirname(''), '../../.env') });
 
 const JWT_SECRET = process.env.JWT_SECRET; // Obtener JWT_SECRET
 
@@ -13,7 +15,7 @@ if (!JWT_SECRET) {
     throw new Error('JWT_SECRET no está definido en el archivo .env'); // Comprobar que esté definido
 }
 
-async function loginAuth(correo_electronico, contraseña) {
+export async function loginAuth(correo_electronico, contraseña) {
     try {
         const { data: usuario, error } = await supabase
             .from('usuarios')
@@ -55,4 +57,3 @@ async function loginAuth(correo_electronico, contraseña) {
         };
     }
 }
-module.exports = { loginAuth };
