@@ -8,6 +8,9 @@ require('dotenv').config();
 
 app.use(express.json());
 
+// Rutas
+app.use('/usuarios', rutasUsuarios);
+app.use('/perfiles', rutasPerfiles);
 
 
 // Endpoint de inicio de sesión
